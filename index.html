@@ -499,7 +499,7 @@
 <body>
 
 <nav>
-  <a class="nav-logo" href="#">AS / PORTFOLIO</a>
+  <a class="nav-logo" href="#">ALEXIS SOTELO</a>
   <div class="nav-links">
     <a href="#projects">Projects</a>
     <a href="#skills">Skills</a>
@@ -537,6 +537,27 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "accent": "50",
   "density": "normal"
 } /*EDITMODE-END*/;
+
+const EVENTS = [
+{
+  id: "lima-game-fest",
+  title: "Lima Game Fest",
+  year: "2019",
+  tags: ["Games Showcase"],
+  desc: "Event organizer of the biggest peruvian-focused indie game showcase.",
+  links: [{ label: "Video", href: "https://www.youtube.com/watch?v=-miUiTHg5IM" }],
+  color: "30"
+},
+{
+  id: "peru-game-expo",
+  title: "Peru Game Expo",
+  year: "2017",
+  desc: "Co-organizer of the first peruvian-focused indie game showcase.",
+  links: [{ label: "Video", href: "https://www.youtube.com/watch?v=KN9_wpTIzJ8" }],
+  tags: ["Games Showcase"],
+  color: "280"
+},
+];
 
 const PROJECTS = [
 {
@@ -723,6 +744,32 @@ function ProjectPattern({ color = "195", size = "sm" }) {
 
 }
 
+function EventCard({ event }) {
+  return (
+    <div className="project-card featured" style={{ gridTemplateColumns: '1fr' }}>
+      <div className="project-body">
+        <div>
+          <div className="project-meta">
+            <span className="project-year">{event.year}</span>
+            {event.tags.map((t) => <span key={t} className="tag">{t}</span>)}
+          </div>
+          <h3 className="project-title" style={{ marginTop: 10 }}>{event.title}</h3>
+          {event.desc && <p className="project-desc">{event.desc}</p>}
+        </div>
+        {event.links &&
+          <div className="project-links">
+            {event.links.map((l) =>
+              <a key={l.label} className="project-link" href={l.href} target="_blank" rel="noopener">
+                <span>↗</span>{l.label}
+              </a>
+            )}
+          </div>
+        }
+      </div>
+    </div>
+  );
+}
+
 function ProjectCard({ project, isFeatured }) {
   return (
     <div className={`project-card${isFeatured ? " featured" : ""}`}>
@@ -801,7 +848,7 @@ function App() {
       <section id="projects" style={{ paddingTop: 0 }}>
         <div className="section-header">
           <span className="section-label">01</span>
-          <h2 className="section-title">Projects</h2>
+          <h2 className="section-title">Games</h2>
           <div className="section-line"></div>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--dim)', whiteSpace: 'nowrap' }}>{PROJECTS.length} titles</span>
         </div>
@@ -833,10 +880,24 @@ function App() {
         }
       </section>
 
+      {/* EVENTS */}
+      <section id="events">
+        <div className="section-header">
+          <span className="section-label">02</span>
+          <h2 className="section-title">Events</h2>
+          <div className="section-line"></div>
+        </div>
+        {EVENTS.map((e) =>
+          <div key={e.id} className="projects-featured" style={{ marginBottom: 24 }}>
+            <EventCard event={e} />
+          </div>
+        )}
+      </section>
+
       {/* SKILLS */}
       <section id="skills">
         <div className="section-header">
-          <span className="section-label">02</span>
+          <span className="section-label">03</span>
           <h2 className="section-title">Skills</h2>
           <div className="section-line"></div>
         </div>
