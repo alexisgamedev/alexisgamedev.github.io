@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexis Sotelo — Game Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  :root {
+    --bg: #07090e;
+    --surface: #0d1118;
+    --surface2: #111620;
+    --border: oklch(28% 0.03 220);
+    --border-bright: oklch(42% 0.08 50);
+    --cyan: oklch(74% 0.17 50);
+    --violet: oklch(68% 0.17 280);
+    --text: oklch(91% 0.01 220);
+    --muted: oklch(52% 0.025 220);
+    --dim: oklch(35% 0.02 220);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-display);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  /* Scanline texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.04) 2px,
+      rgba(0,0,0,0.04) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+  /* Grid bg on hero */
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 100%);
+    opacity: 0.35;
+  }
+  .hero-glow {
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(ellipse, oklch(74% 0.17 195 / 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    background: linear-gradient(to bottom, rgba(7,9,14,0.95), transparent);
+    backdrop-filter: blur(8px);
+  }
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--cyan);
+    letter-spacing: 0.08em;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 140px 48px 80px;
+    overflow: hidden;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--cyan);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+  .hero-name {
+    font-size: clamp(56px, 8vw, 104px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s forwards;
+  }
+  .hero-name em {
+    font-style: normal;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--cyan);
+  }
+  .hero-bio {
+    max-width: 560px;
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.35s forwards;
+    font-weight: 300;
+  }
+  .hero-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.5s forwards;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+    background: var(--surface);
+  }
+  .pill:hover { border-color: var(--cyan); color: var(--cyan); }
+  .pill .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--cyan);
+    opacity: 0.5;
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeIn 1s 1.2s forwards;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--cyan), transparent);
+    animation: scrollPulse 2s 1.5s infinite;
+  }
+
+  /* SECTION */
+  section { padding: 100px 48px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 56px;
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--cyan);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* PROJECTS */
+  .projects-featured {
+    margin-bottom: 24px;
+  }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+    position: relative;
+  }
+  .project-card:hover {
+    border-color: var(--border-bright);
+    box-shadow: 0 0 32px oklch(74% 0.17 195 / 0.08), 0 4px 24px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
+  }
+  .project-card.featured {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+  }
+  .project-card.featured .project-img {
+    aspect-ratio: auto;
+    height: 320px;
+  }
+  .project-img {
+    background: var(--surface2);
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-img-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+  }
+  .project-img-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--dim);
+    z-index: 1;
+    text-align: center;
+  }
+  .project-body {
+    padding: 28px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .project-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .project-year {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--dim);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+  .project-title {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .project-card.featured .project-title { font-size: 28px; }
+  .project-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+  .project-role {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .project-links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .project-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .project-link:hover { border-color: var(--cyan); color: var(--cyan); }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  .projects-grid .project-card .project-body { padding: 20px; }
+  .projects-grid .project-card .project-title { font-size: 18px; }
+
+  /* Animated corner accent */
+  .project-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 40px; height: 40px;
+    border-top: 1px solid var(--cyan);
+    border-right: 1px solid var(--cyan);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .project-card:hover::after { opacity: 1; }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .skill-group {
+    background: var(--surface);
+    padding: 28px;
+  }
+  .skill-group-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--cyan);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .skill-tag {
+    font-size: 13px;
+    color: var(--muted);
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .skill-tag:hover { color: var(--text); border-color: var(--border-bright); }
+
+  /* REFERENCES */
+  .refs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .ref-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: 4px;
+  }
+  .ref-name { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .ref-title { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-bottom: 12px; letter-spacing: 0.05em; }
+  .ref-quote { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.65; font-style: italic; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .footer-name {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-link {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--cyan); }
+
+  /* TWEAKS */
+  .tweaks-panel {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border-bright);
+    padding: 20px;
+    width: 260px;
+    z-index: 200;
+    display: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    box-shadow: 0 0 40px oklch(74% 0.17 195 / 0.12);
+  }
+  .tweaks-panel.visible { display: block; }
+  .tweaks-title {
+    color: var(--cyan);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .tweak-row { margin-bottom: 14px; }
+  .tweak-label { color: var(--muted); margin-bottom: 6px; display: block; }
+  .tweak-select, .tweak-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    outline: none;
+  }
+  .tweak-select:focus, .tweak-input:focus { border-color: var(--cyan); }
+  .tweak-swatch-row { display: flex; gap: 8px; }
+  .tweak-swatch {
+    width: 28px; height: 28px;
+    border-radius: 2px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.15s;
+  }
+  .tweak-swatch.active { border-color: white; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.15); }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 120px 20px 60px; }
+    section { padding: 60px 20px; }
+    .project-card.featured { grid-template-columns: 1fr; }
+    .project-card.featured .project-img { height: 200px; }
+    footer { padding: 32px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">AS / PORTFOLIO</a>
+  <div class="nav-links">
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<div id="root"></div>
+<div class="tweaks-panel" id="tweaksPanel">
+  <div class="tweaks-title">Tweaks</div>
+  <div class="tweak-row">
+    <span class="tweak-label">Accent color</span>
+    <div class="tweak-swatch-row">
+      <div class="tweak-swatch" style="background:oklch(74% 0.17 195)" data-accent="195" title="Cyan"></div>
+      <div class="tweak-swatch" style="background:oklch(72% 0.17 280)" data-accent="280" title="Violet"></div>
+      <div class="tweak-swatch" style="background:oklch(72% 0.17 155)" data-accent="155" title="Green"></div>
+      <div class="tweak-swatch active" style="background:oklch(72% 0.17 50)" data-accent="50" title="Amber"></div>
+      <div class="tweak-swatch" style="background:oklch(72% 0.17 15)" data-accent="15" title="Red"></div>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <span class="tweak-label">Layout density</span>
+    <select class="tweak-select" id="twDensity">
+      <option value="normal">Normal</option>
+      <option value="compact">Compact</option>
+      <option value="spacious">Spacious</option>
+    </select>
+  </div>
+</div>
+
+<script type="text/babel">
+
+
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "50",
+  "density": "normal"
+} /*EDITMODE-END*/;
+
+const PROJECTS = [
+{
+  id: "eon-rush",
+  title: "Eon Rush",
+  year: "2024 — Present",
+  tags: ["PC", "Steam", "Indie"],
+  role: "Lead Developer",
+  desc: "A fast-paced sci-fi action game developed independently and released on Steam. Responsible for full-cycle development including gameplay systems, UI, physics, and publishing pipeline.",
+  links: [{ label: "Steam", href: "https://store.steampowered.com/app/2557020/Eon_Rush/" }],
+  featured: true,
+  color: "195"
+},
+{
+  id: "ksp2",
+  title: "Kerbal Space Program 2",
+  year: "2023",
+  tags: ["PC", "AAA", "Simulation"],
+  role: "Software Developer",
+  desc: "Contributed to the highly-anticipated sequel to Kerbal Space Program as Support Engineer.",
+  links: [{ label: "Website", href: "https://www.kerbalspaceprogram.com/games-kerbal-space-program-2" }],
+  color: "195"
+},
+{
+  id: "convergence",
+  title: "CONV/RGENCE: A League of Legends Story",
+  year: "2022",
+  tags: ["PC", "Console", "Action Platformer"],
+  role: "Lead Developer",
+  desc: "Action RPG set in the League of Legends universe, published by Riot Forge and developed by Double Stallion Games. Contributed as Support Engineer.",
+  links: [
+  { label: "Steam", href: "https://store.steampowered.com/app/1276800/CONVERGENCE_A_League_of_Legends_Story/" }],
+
+  color: "280"
+},
+{
+  id: "struckd",
+  title: "Struckd",
+  year: "2023",
+  tags: ["Mobile", "Web", "UGC Platform"],
+  role: "Unity Developer",
+  desc: "User-generated content game platform by Unity Technologies, enabling anyone to create and share games. Developed features for the creation toolset and runtime environment.",
+  links: [{ label: "Platform", href: "https://play.unity.com/en/studio" }],
+  color: "155"
+},
+{
+  id: "wordblox",
+  title: "Wordblox",
+  year: "2021",
+  tags: ["Mobile", "Puzzle"],
+  role: "Lead Developer",
+  desc: "A word puzzle mobile game combining block mechanics with vocabulary challenges. Designed and implemented core game loop, progression system, and UI.",
+  links: [{ label: "Trailer", href: "https://www.youtube.com/shorts/yKaLa9kjc4Q" }],
+  color: "50"
+},
+{
+  id: "animales",
+  title: "Animales al Rescate",
+  year: "2020",
+  tags: ["Web", "Educational"],
+  role: "Lead Developer",
+  desc: "Educational game developed for Ser Humano Educación, designed to engage students and report progress to teachers.",
+  links: [{ label: "Website", href: "https://www.serhumano-educacion.com/" }],
+  color: "155"
+},
+{
+  id: "teddymania",
+  title: "TeddyMania",
+  year: "2018",
+  tags: ["Mobile", "Casual"],
+  role: "Developer",
+  desc: "Casual mobile game published under Amazing Games studio on itch.io. Developed gameplay mechanics, animations, and monetization systems.",
+  links: [
+  { label: "itch.io", href: "https://amazinggames.itch.io/teddymania" }],
+
+  color: "50"
+},
+{
+  id: "luckybucks",
+  title: "Lucky Bucks",
+  year: "2018",
+  tags: ["Mobile", "Casino"],
+  role: "Developer",
+  desc: "Mobile casual casino-style game with real cash mechanics. Implemented game logic, UI systems, and backend integration for Android release.",
+  links: [{ label: "APKPure", href: "https://m.apkpure.com/es/lucky-bucks-win-real-cash/com.rsmg.gwb.luckybucks" }],
+  color: "50"
+},
+{
+  id: "grapple-hero",
+  title: "Grapple Hero",
+  year: "2017",
+  tags: ["Mobile", "Android", "Platformer"],
+  role: "Lead Developer — Planet 8 Entertainment",
+  desc: "Physics-based grapple platformer for Android. Led development of the grapple rope physics system, procedural level generation, and Google Play integration.",
+  links: [
+  { label: "Trailer", href: "https://www.youtube.com/watch?v=HrqS732IHTY" },
+  { label: "Play Store", href: "https://play.google.com/store/apps/details?id=com.planet8entertainment.grapplehero" }],
+
+  color: "195"
+},
+{
+  id: "twomatch",
+  title: "TwoMatch",
+  year: "2017",
+  tags: ["Mobile", "Puzzle", "Android"],
+  role: "Lead Developer",
+  desc: "Connect-two puzzle game for Android. Designed match mechanics, difficulty curve, and implemented the full mobile publishing pipeline.",
+  links: [
+  { label: "Play Store", href: "https://play.google.com/store/apps/details?id=com.AmazingGames.twomatch" }],
+
+  color: "280"
+},
+{
+  id: "ftj-engine",
+  title: "FTJ Engine",
+  year: "2016",
+  tags: ["Engine", "C++", "Personal"],
+  role: "Solo Developer",
+  desc: "Custom C++ game engine built from scratch. Implemented a full rendering pipeline, physics system, asset management, and entity-component architecture.",
+  links: [{ label: "Bitbucket", href: "https://bitbucket.org/alexissotelo/ftj_enginecore/src/master/" }],
+  color: "195"
+},
+{
+  id: "minion-brawler",
+  title: "Minion Brawler",
+  year: "2016",
+  tags: ["Mobile", "Brawler"],
+  role: "Developer",
+  desc: "Wave-based brawler game featuring minion hordes. Developed enemy AI systems, combat mechanics, and performance optimization for mobile targets.",
+  links: [{ label: "Trailer", href: "https://www.youtube.com/watch?v=pHK0jQhGpk4" }],
+  color: "15"
+},
+{
+  id: "island-raiders",
+  title: "Island Raiders",
+  year: "2015",
+  tags: ["Mobile", "Strategy"],
+  role: "Lead Developer",
+  desc: "Mobile strategy game with island-combat mechanics. Led end-to-end development from prototyping through launch, including AI, UI, and level design systems.",
+  links: [
+  { label: "Trailer", href: "https://www.youtube.com/watch?v=qkBJg5DBA3c" },
+  { label: "Source", href: "https://bitbucket.org/alexissotelo/island-raiders" }],
+
+  color: "155"
+}];
+
+
+const SKILLS = [
+{ group: "Engines & Languages", items: ["Unity 3D", "C#", "C++", "Unreal Engine", "HLSL / GLSL"] },
+{ group: "Platforms", items: ["PC / Steam", "Android", "iOS", "WebGL", "VR / XR"] },
+{ group: "Systems", items: ["Gameplay Programming", "Physics Systems", "AI / Pathfinding", "Shader Programming", "Custom Engine Dev"] },
+{ group: "Tools & Workflow", items: ["Git / Version Control", "Agile / Scrum", "CI/CD Pipelines", "Unity Addressables", "Profiling & Optimization"] }];
+
+
+const REFS = [
+{ name: "Sergio Gomez", title: "Senior Engineer · Unity Technologies", email: "sergio@unity3d.com" },
+{ name: "Alvaro Barua", title: "Game Director", email: "alvaro.baruae@gmail.com" },
+{ name: "Ryan Abrams", title: "Director · Robot Sea Monster Games", email: "rabrams@robotseamonstergames.com" },
+{ name: "Liam Svirk", title: "Producer · Robot Sea Monster Games", email: "lsvirk@robotseamonstergames.com" },
+{ name: "Tod Bouris", title: "Studio Lead", email: null },
+{ name: "Gary Ng", title: "Technical Lead", email: null },
+{ name: "Luis Wong", title: "Creative Director", email: "luis@luiswong.com" }];
+
+
+// SVG placeholder pattern
+function ProjectPattern({ color = "195", size = "sm" }) {
+  const hue = color;
+  return (
+    <svg className="project-img-pattern" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id={`grid-${hue}`} width="30" height="30" patternUnits="userSpaceOnUse">
+          <path d="M 30 0 L 0 0 0 30" fill="none" stroke={`oklch(74% 0.17 ${hue})`} strokeWidth="0.5" />
+        </pattern>
+      </defs>
+      <rect width="400" height="300" fill={`oklch(12% 0.03 ${hue})`} />
+      <rect width="400" height="300" fill={`url(#grid-${hue})`} />
+      <circle cx="200" cy="150" r="60" fill="none" stroke={`oklch(74% 0.17 ${hue})`} strokeWidth="0.8" strokeDasharray="4 4" />
+      <circle cx="200" cy="150" r="30" fill="none" stroke={`oklch(74% 0.17 ${hue})`} strokeWidth="0.5" />
+      <line x1="140" y1="150" x2="260" y2="150" stroke={`oklch(74% 0.17 ${hue})`} strokeWidth="0.5" />
+      <line x1="200" y1="90" x2="200" y2="210" stroke={`oklch(74% 0.17 ${hue})`} strokeWidth="0.5" />
+    </svg>);
+
+}
+
+function ProjectCard({ project, isFeatured }) {
+  return (
+    <div className={`project-card${isFeatured ? " featured" : ""}`}>
+      {isFeatured &&
+      <div className="project-img">
+          <ProjectPattern color={project.color} />
+          <span className="project-img-label">// game screenshot</span>
+        </div>
+      }
+      <div className="project-body">
+        <div>
+          <div className="project-meta">
+            <span className="project-year">{project.year}</span>
+            {project.tags.map((t) => <span key={t} className="tag">{t}</span>)}
+          </div>
+          <h3 className="project-title" style={{ marginTop: 10, marginBottom: 8 }}>{project.title}</h3>
+          <p className="project-desc">{project.desc}</p>
+        </div>
+        <div>
+          <p className="project-role" style={{ marginBottom: 12 }}>↳ {project.role}</p>
+          <div className="project-links">
+            {project.links.map((l) =>
+            <a key={l.label} className="project-link" href={l.href} target="_blank" rel="noopener">
+                <span>↗</span>{l.label}
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+      {!isFeatured &&
+      <div className="project-img" style={{ height: 140 }}>
+          <ProjectPattern color={project.color} />
+        </div>
+      }
+    </div>);
+
+}
+
+function App() {
+  const [showAll, setShowAll] = React.useState(false);
+  const featured = PROJECTS[0];
+  const struckd = PROJECTS.find((p) => p.id === 'struckd');
+  const gridProjects = PROJECTS.slice(1).filter((p) => p.id !== 'struckd');
+  const rest = showAll ? gridProjects : gridProjects.slice(0, 6);
+
+  return (
+    <>
+      {/* HERO */}
+      <section className="hero" style={{ paddingLeft: 48, paddingRight: 48 }}>
+        <div className="hero-grid" />
+        <div className="hero-glow" />
+        <div className="hero-eyebrow">// Game Developer · Unity Expert</div>
+        <h1 className="hero-name">
+          Alexis<br /><em>Sotelo</em>
+        </h1>
+        <p className="hero-bio">Game developer with over 10 years of experience with the Unity Engine, C# and C++ applications; having shipped titles for PC, mobile, web and VR.
+
+        </p>
+        <div className="hero-links">
+          <a className="pill" href="https://github.com/alexisgamedev" target="_blank"><span className="dot"></span>GitHub</a>
+          <a className="pill" href="https://gitlab.com/ags-public/" target="_blank"><span className="dot"></span>GitLab</a>
+          <a className="pill" href="https://www.linkedin.com/in/asotelo94/" target="_blank"><span className="dot"></span>LinkedIn</a>
+        </div>
+        <div className="hero-scroll">
+          <div className="scroll-line"></div>
+        </div>
+      </section>
+
+      {/* PROJECTS */}
+      <section id="projects" style={{ paddingTop: 0 }}>
+        <div className="section-header">
+          <span className="section-label">01</span>
+          <h2 className="section-title">Projects</h2>
+          <div className="section-line"></div>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--dim)', whiteSpace: 'nowrap' }}>{PROJECTS.length} titles</span>
+        </div>
+        <div className="projects-featured">
+          <ProjectCard project={featured} isFeatured={true} />
+        </div>
+        <div className="projects-featured" style={{ marginBottom: 24 }}>
+          <ProjectCard project={struckd} isFeatured={true} />
+        </div>
+        <div className="projects-grid">
+          {rest.map((p) => <ProjectCard key={p.id} project={p} isFeatured={false} />)}
+        </div>
+        {!showAll &&
+        <div style={{ textAlign: 'center', marginTop: 32 }}>
+            <button
+            onClick={() => setShowAll(true)}
+            style={{
+              fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--muted)',
+              background: 'var(--surface)', border: '1px solid var(--border)',
+              padding: '10px 28px', cursor: 'pointer', letterSpacing: '0.08em',
+              transition: 'border-color 0.2s, color 0.2s'
+            }}
+            onMouseOver={(e) => {e.target.style.borderColor = 'var(--cyan)';e.target.style.color = 'var(--cyan)';}}
+            onMouseOut={(e) => {e.target.style.borderColor = 'var(--border)';e.target.style.color = 'var(--muted)';}}>
+            
+              Show all {PROJECTS.length} projects ↓
+            </button>
+          </div>
+        }
+      </section>
+
+      {/* SKILLS */}
+      <section id="skills">
+        <div className="section-header">
+          <span className="section-label">02</span>
+          <h2 className="section-title">Skills</h2>
+          <div className="section-line"></div>
+        </div>
+        <div className="skills-grid">
+          {SKILLS.map((sg) =>
+          <div key={sg.group} className="skill-group">
+              <div className="skill-group-title">{sg.group}</div>
+              <div className="skill-tags">
+                {sg.items.map((s) => <span key={s} className="skill-tag">{s}</span>)}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section id="contact" style={{ paddingBottom: 40 }}>
+        <div className="section-header">
+          <span className="section-label">03</span>
+          <h2 className="section-title">Contact</h2>
+          <div className="section-line"></div>
+        </div>
+        <p style={{ color: 'var(--muted)', maxWidth: 480, marginBottom: 20, fontWeight: 300, fontSize: "16px" }}>email: asotelo94@gmail.com
+
+</p>
+        <a className="pill" href="https://www.linkedin.com/in/asotelo94/" target="_blank" rel="noopener"><span className="dot"></span>LinkedIn</a>
+      </section>
+    </>);}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+// FOOTER
+document.addEventListener('DOMContentLoaded', () => {
+  const footer = document.createElement('footer');
+  footer.innerHTML = `
+    <span class="footer-name">Alexis Sotelo</span>
+    <div class="footer-links">
+      <a class="footer-link" href="https://gitlab.com/ags-public/" target="_blank">GitLab</a>
+      <a class="footer-link" href="https://github.com/alexisgamedev" target="_blank">GitHub</a>
+      <a class="footer-link" href="https://www.upwork.com/freelancers/alexissotelo3" target="_blank">Upwork</a>
+      <a class="footer-link" href="https://amazinggames.itch.io/" target="_blank">itch.io</a>
+    </div>
+    <span style="font-family:var(--font-mono); font-size:11px; color:var(--dim)">© 2024</span>
+  `;
+  document.body.appendChild(footer);
+});
+</script>
+
+<script>
+// Tweaks system
+window.addEventListener('message', (e) => {
+  if (e.data?.type === '__activate_edit_mode') {
+    document.getElementById('tweaksPanel').classList.add('visible');
+  }
+  if (e.data?.type === '__deactivate_edit_mode') {
+    document.getElementById('tweaksPanel').classList.remove('visible');
+  }
+});
+window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+// Accent swatches
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.tweak-swatch').forEach(sw => {
+    sw.addEventListener('click', () => {
+      document.querySelectorAll('.tweak-swatch').forEach(s => s.classList.remove('active'));
+      sw.classList.add('active');
+      const hue = sw.dataset.accent;
+      document.documentElement.style.setProperty('--cyan', `oklch(74% 0.17 ${hue})`);
+      document.documentElement.style.setProperty('--border-bright', `oklch(42% 0.08 ${hue})`);
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { accent: hue } }, '*');
+    });
+  });
+
+  document.getElementById('twDensity')?.addEventListener('change', (e) => {
+    const val = e.target.value;
+    const map = { compact: '60px', normal: '100px', spacious: '140px' };
+    document.querySelectorAll('section').forEach(s => s.style.paddingTop = map[val]);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { density: val } }, '*');
+  });
+});
+</script>
+</body>
+</html>
