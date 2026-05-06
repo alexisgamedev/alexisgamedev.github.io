@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TwoMatch — Privacy & Cookie Policy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1612;
+    --ink-muted: #6b6460;
+    --ink-faint: #a09c99;
+    --cream: #faf8f5;
+    --cream-mid: #f0ede8;
+    --accent: #c4531a;
+    --accent-light: #f5e8df;
+    --rule: rgba(0,0,0,0.10);
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.75;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+  }
+
+  .game-tag {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(196,83,26,0.15);
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 100px;
+    margin-bottom: 1.2rem;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-weight: 400;
+    line-height: 1.12;
+    color: var(--cream);
+    margin-bottom: 0.7rem;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: rgba(250,248,245,0.45);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 1.5rem 5rem;
+  }
+
+  .intro-band {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 1.1rem 1.4rem;
+    margin: 2.5rem 0 2rem;
+    font-size: 14px;
+    color: #7a3412;
+    line-height: 1.65;
+  }
+
+  .intro-band strong { font-weight: 500; }
+
+  .toc {
+    margin: 0 0 2.5rem;
+    padding: 1.4rem 1.6rem;
+    background: var(--cream-mid);
+    border-radius: 10px;
+  }
+
+  .toc-title {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--ink-faint);
+    margin-bottom: 0.8rem;
+  }
+
+  .toc ol {
+    list-style: none;
+    counter-reset: toc-counter;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 1rem;
+  }
+
+  .toc li {
+    counter-increment: toc-counter;
+    font-size: 13px;
+  }
+
+  .toc li::before {
+    content: counter(toc-counter, decimal-leading-zero) ". ";
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+    margin-right: 4px;
+  }
+
+  .toc a { color: var(--ink-muted); text-decoration: none; transition: color 0.15s; }
+  .toc a:hover { color: var(--accent); }
+
+  .chapter-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 3rem 0 2rem;
+  }
+
+  .chapter-divider span {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .chapter-divider::before, .chapter-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  section { margin-bottom: 2.8rem; }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section-num {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  p { margin-bottom: 0.9rem; }
+  p:last-child { margin-bottom: 0; }
+
+  ul, ol { margin: 0.6rem 0 0.9rem 1.2rem; padding: 0; }
+  li { margin-bottom: 0.35rem; }
+
+  .highlight-box {
+    background: #fff8f0;
+    border: 1px solid #f5d4b8;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    font-size: 14px;
+    color: #5c3a1e;
+    line-height: 1.6;
+  }
+
+  .coppa-box {
+    background: #fef2f0;
+    border: 1.5px solid #fac5bb;
+    border-radius: 8px;
+    padding: 1.1rem 1.3rem;
+    margin: 1rem 0;
+  }
+
+  .coppa-label {
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #b03a25;
+    margin-bottom: 0.4rem;
+  }
+
+  .coppa-box p { font-size: 14px; color: #7a2a18; margin: 0; line-height: 1.6; }
+
+  .third-party-card {
+    border: 0.5px solid var(--rule);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin: 0.7rem 0;
+    background: white;
+  }
+
+  .third-party-card .tp-name {
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 0.25rem;
+    color: var(--ink);
+  }
+
+  .third-party-card .tp-purpose {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .third-party-card a { color: var(--accent); text-decoration: none; }
+  .third-party-card a:hover { text-decoration: underline; }
+
+  .cookie-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 1rem 0;
+  }
+
+  .cookie-table th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 0 0.75rem 0.5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .cookie-table td {
+    padding: 0.6rem 0.75rem 0.6rem 0;
+    border-bottom: 0.5px solid var(--rule);
+    vertical-align: top;
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+
+  .cookie-table td:first-child { color: var(--ink); font-weight: 400; }
+
+  .badge {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+
+  .badge-essential { background: #e8f5ee; color: #1a6b3a; }
+  .badge-analytics { background: #e8effc; color: #1a3d8f; }
+  .badge-none { background: #f0ede8; color: #a09c99; }
+
+  .contact-card {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 10px;
+    padding: 1.5rem 1.7rem;
+    margin-top: 1rem;
+  }
+
+  .contact-card .label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(250,248,245,0.4);
+    margin-bottom: 0.3rem;
+  }
+
+  .contact-card a { color: #f0a678; text-decoration: none; font-weight: 400; }
+  .contact-card p { font-size: 14px; line-height: 1.65; }
+
+  footer {
+    text-align: center;
+    padding: 2rem 1rem 3rem;
+    font-size: 12px;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--rule);
+  }
+
+  @media (max-width: 520px) {
+    .toc ol { grid-template-columns: 1fr; }
+    h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="game-tag">Mobile game</div>
+  <h1>Privacy &amp; Cookie Policy</h1>
+  <p class="header-sub">TwoMatch &nbsp;·&nbsp; Last updated: May 6, 2026</p>
+</header>
+
+<div class="container">
+
+  <div class="intro-band">
+    <strong>Your privacy matters.</strong> This policy explains what information TwoMatch collects, why we collect it, and your rights as a player — including special protections for children under 13.
+  </div>
+
+  <nav class="toc">
+    <p class="toc-title">Contents</p>
+    <ol>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#data-collected">Data we collect</a></li>
+      <li><a href="#purchases">In-app purchases</a></li>
+      <li><a href="#analytics">Analytics &amp; device info</a></li>
+      <li><a href="#children">Children's privacy (COPPA)</a></li>
+      <li><a href="#third-parties">Third parties</a></li>
+      <li><a href="#retention">Data retention</a></li>
+      <li><a href="#rights">Your rights</a></li>
+      <li><a href="#changes">Policy changes</a></li>
+      <li><a href="#cookies">Cookie policy</a></li>
+      <li><a href="#contact">Contact us</a></li>
+    </ol>
+  </nav>
+
+  <div class="chapter-divider"><span>Privacy Policy</span></div>
+
+  <section id="overview">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Overview</h2>
+    </div>
+    <p>TwoMatch ("we," "us," or "our") is committed to protecting the privacy of all players, especially children. This Privacy Policy applies to our mobile game TwoMatch and any related services we operate.</p>
+    <p>By downloading or playing TwoMatch, you agree to the practices described in this policy. If you are a parent or guardian and do not agree with these practices, please do not allow your child to use TwoMatch.</p>
+  </section>
+
+  <section id="data-collected">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Data we collect</h2>
+    </div>
+    <p>TwoMatch collects only the information necessary to operate and improve the game. We collect data in two ways: automatically (when you play) and when you make in-app purchases.</p>
+    <ul>
+      <li><strong>Device identifiers</strong> — advertising ID, device model, OS version, and language settings</li>
+      <li><strong>Usage data</strong> — levels played, session duration, feature interactions, and game progress</li>
+      <li><strong>Purchase records</strong> — transaction IDs, purchase amounts, and item identifiers (processed by Apple/Google — we never see raw payment card details)</li>
+      <li><strong>Google Play account identifiers</strong> — a Google Player ID used for authentication and achievements (see section 06)</li>
+    </ul>
+    <p>We do not collect your name, email address, or any social profile information unless you voluntarily contact our support team.</p>
+  </section>
+
+  <section id="purchases">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>In-app purchases</h2>
+    </div>
+    <p>TwoMatch offers optional in-app purchases processed entirely through the Apple App Store or Google Play Store. We receive only a transaction confirmation and the item purchased — your payment card details are handled exclusively by Apple or Google under their respective privacy policies.</p>
+    <div class="highlight-box">
+      Purchase history is retained to validate entitlements (e.g., restoring purchases) and for legal compliance with tax and financial record-keeping requirements.
+    </div>
+  </section>
+
+  <section id="analytics">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Analytics &amp; device information</h2>
+    </div>
+    <p>We use aggregated analytics data to understand how players interact with TwoMatch, diagnose crashes, and improve gameplay balance. This includes:</p>
+    <ul>
+      <li>Which levels are completed or abandoned most often</li>
+      <li>Average session length and frequency</li>
+      <li>Crash reports linked to device model and OS version</li>
+      <li>Advertising ID (for frequency capping, if ads are shown)</li>
+    </ul>
+    <p>Analytics data is processed in aggregate and is not used to build individual behavioral profiles. You may opt out of analytics through your device's privacy settings (iOS: Settings → Privacy → Analytics; Android: Settings → Google → Ads).</p>
+  </section>
+
+  <section id="children">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Children's privacy (COPPA)</h2>
+    </div>
+    <p>TwoMatch is directed at a general audience that includes children. We take the privacy of children under 13 seriously and comply with the Children's Online Privacy Protection Act (COPPA).</p>
+    <div class="coppa-box">
+      <p class="coppa-label">COPPA commitment</p>
+      <p>We do not knowingly collect personal information from children under 13 without verifiable parental consent. We do not serve behaviorally targeted advertising to children under 13.</p>
+    </div>
+    <p>Specifically for players under 13:</p>
+    <ul>
+      <li>Google Play Games sign-in and achievements are not available</li>
+      <li>Behaviorally targeted ads are disabled</li>
+      <li>Analytics collection is limited to what is strictly necessary for gameplay functionality</li>
+      <li>No persistent device identifiers are linked to gameplay data</li>
+      <li>Google Play Services is configured in child-directed mode, which restricts Google's data collection</li>
+    </ul>
+    <p><strong>Parents and guardians:</strong> If you believe your child under 13 has provided personal information without your consent, please contact us immediately at the address below. We will promptly delete any such information.</p>
+  </section>
+
+  <section id="third-parties">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Third parties</h2>
+    </div>
+    <p>We work with the following third-party services. Each is bound by contract to use your data only for the purposes we specify.</p>
+
+    <div class="third-party-card">
+      <p class="tp-name">Google Play Services (Google LLC)</p>
+      <p class="tp-purpose">Used for player authentication, leaderboards, and achievements. When you sign in with Google Play Games, Google assigns you a Player ID and may collect gameplay data in accordance with <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a>. You can manage or delete your Google Play Games data via your Google account at <a href="https://myaccount.google.com" target="_blank">myaccount.google.com</a>. This feature is unavailable to players under 13.</p>
+    </div>
+
+    <div class="third-party-card">
+      <p class="tp-name">Apple App Store / Google Play Store</p>
+      <p class="tp-purpose">Process all in-app purchases. We receive only a transaction confirmation — your payment details remain with Apple or Google.</p>
+    </div>
+
+    <div class="third-party-card">
+      <p class="tp-name">Analytics &amp; crash reporting providers</p>
+      <p class="tp-purpose">Used to collect aggregated gameplay metrics and diagnose technical issues. These providers do not receive personally identifiable information.</p>
+    </div>
+
+    <p style="margin-top:1rem;">We do not sell your personal information to any third party.</p>
+  </section>
+
+  <section id="retention">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Data retention</h2>
+    </div>
+    <p>We retain data only as long as necessary for the purposes described in this policy:</p>
+    <ul>
+      <li>Usage and analytics data — up to 24 months, then deleted or anonymized</li>
+      <li>Purchase records — up to 7 years for tax and legal compliance</li>
+      <li>Support communications — up to 2 years after your inquiry is resolved</li>
+    </ul>
+    <p>You may request deletion of your data at any time by contacting us (see section 11). We will fulfill deletion requests within 30 days, except where retention is required by law.</p>
+  </section>
+
+  <section id="rights">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Your rights</h2>
+    </div>
+    <p>Depending on your jurisdiction, you may have the following rights regarding your personal data:</p>
+    <ul>
+      <li><strong>Access</strong> — request a copy of the data we hold about you</li>
+      <li><strong>Correction</strong> — ask us to correct inaccurate data</li>
+      <li><strong>Deletion</strong> — request that we delete your data ("right to be forgotten")</li>
+      <li><strong>Objection</strong> — object to certain types of data processing</li>
+      <li><strong>Portability</strong> — receive your data in a structured, machine-readable format</li>
+    </ul>
+    <p>To exercise any of these rights, contact us using the information in section 11. We will respond within 30 days.</p>
+  </section>
+
+  <section id="changes">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>Policy changes</h2>
+    </div>
+    <p>We may update this Privacy Policy from time to time. When we make material changes, we will notify you through an in-game notice or by updating the "Last updated" date at the top of this page. Your continued use of TwoMatch after any update constitutes your acceptance of the revised policy.</p>
+  </section>
+
+  <div class="chapter-divider"><span>Cookie Policy</span></div>
+
+  <section id="cookies">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2>Cookie policy</h2>
+    </div>
+    <p>TwoMatch is a mobile game and does not use browser cookies during normal gameplay. However, if you visit our website or support portal, small data files called cookies may be placed on your device.</p>
+    <p>We use three types of cookies:</p>
+    <table class="cookie-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Purpose</th>
+          <th>Can be disabled?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-essential">Essential</span></td>
+          <td>Keep our website functional (e.g., remembering your support session). Cannot be turned off as the site won't work without them.</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-analytics">Analytics</span></td>
+          <td>Help us understand how visitors use our website (page views, referrers). Data is aggregated and anonymous.</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-none">Third-party</span></td>
+          <td>Set by embedded services such as Google Play badges or support widgets. Governed by those providers' own cookie policies.</td>
+          <td>Yes</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Managing cookies:</strong> You can control or delete cookies at any time through your browser settings. Disabling analytics or third-party cookies will not affect your ability to play TwoMatch. Note that essential cookies cannot be disabled without breaking site functionality.</p>
+    <p>For more information, visit <a href="https://www.allaboutcookies.org" target="_blank" style="color:var(--accent);">allaboutcookies.org</a>.</p>
+  </section>
+
+  <section id="contact">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2>Contact us</h2>
+    </div>
+    <p>If you have questions about this Privacy or Cookie Policy, wish to exercise your data rights, or are a parent with COPPA-related concerns, please reach out:</p>
+    <div class="contact-card">
+      <p class="label">Privacy inquiries</p>
+      <p>
+        <strong>TwoMatch Support Team</strong><br>
+        Email: <a href="mailto:privacy@twomatch.example.com">privacy@twomatch.example.com</a><br>
+        Response time: within 30 days
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  &copy; 2026 TwoMatch. All rights reserved.
+</footer>
+
+</body>
+</html>
