@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /tmp)",
+      "Bash(unzip -o \"C:/Users/asote/Downloads/Portfolio.zip\" \"*/README*\" \"README*\" -d portfolio_extract)",
+      "Bash(unzip -o \"C:/Users/asote/Downloads/Portfolio.zip\" -d portfolio_extract)",
+      "Read(//c/Users/asote/Downloads/portfolio_extract/design_handoff_portfolio/**)",
+      "Bash(powershell -Command \"Get-Content 'C:\\\\Users\\\\asote\\\\Downloads\\\\Portfolio.zip' -ErrorAction SilentlyContinue\")",
+      "Read(//tmp/**)"
+    ]
+  }
+}
