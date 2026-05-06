@@ -580,6 +580,7 @@ const PROJECTS = [
   role: "Engine Support Engineer",
   desc: "Contributed to the highly-anticipated sequel to Kerbal Space Program as Support Engineer.",
   links: [{ label: "Website", href: "https://store.steampowered.com/app/954850/Kerbal_Space_Program_2/" }],
+  img: "Images/kerbal2-sc.jpg",
   color: "195"
 },
 {
@@ -591,6 +592,7 @@ const PROJECTS = [
   desc: "Action RPG set in the League of Legends universe, published by Riot Forge and developed by Double Stallion Games. Contributed as Support Engineer.",
   links: [
   { label: "Steam", href: "https://store.steampowered.com/app/1276800/CONVERGENCE_A_League_of_Legends_Story/" }],
+  img: "Images/convergence-sc.jpg",
 
   color: "280"
 },
@@ -634,6 +636,7 @@ const PROJECTS = [
   desc: "Award winning couch brawler.",
   links: [
   { label: "itch.io", href: "https://amazinggames.itch.io/teddymania" }],
+  img: "Images/teddymania-sc2.png",
 
   color: "50"
 },
@@ -806,7 +809,10 @@ function ProjectCard({ project, isFeatured }) {
       </div>
       {!isFeatured &&
       <div className="project-img" style={{ height: 140 }}>
-          <ProjectPattern color={project.color} />
+          {project.img
+            ? <img src={project.img} alt={project.title + " screenshot"} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            : <ProjectPattern color={project.color} />
+          }
         </div>
       }
     </div>);
