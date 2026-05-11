@@ -642,7 +642,7 @@ const PROJECTS = [
 
   color: "50"
 },
-{
+/* {
   id: "luckybucks",
   title: "Lucky Bucks",
   year: "2018",
@@ -664,7 +664,7 @@ const PROJECTS = [
   { label: "Play Store", href: "https://play.google.com/store/apps/details?id=com.planet8entertainment.grapplehero" }],
 
   color: "195"
-},
+}, */
 {
   id: "twomatch",
   title: "TwoMatch",
@@ -674,7 +674,8 @@ const PROJECTS = [
   desc: "Connect-two puzzle game.",
   links: [
   { label: "Play Store", href: "https://play.google.com/store/apps/details?id=com.AmazingGames.twomatch" }],
-
+  featured: true,
+  img: "Images/twomatch-sc.webp",
   color: "280"
 },
 {
@@ -828,7 +829,8 @@ function App() {
   const [showAll, setShowAll] = React.useState(false);
   const featured = PROJECTS[0];
   const struckd = PROJECTS.find((p) => p.id === 'struckd');
-  const gridProjects = PROJECTS.slice(1).filter((p) => p.id !== 'struckd');
+  const twomatch = PROJECTS.find((p) => p.id === 'twomatch');
+  const gridProjects = PROJECTS.slice(1).filter((p) => p.id !== 'struckd' && p.id !== 'twomatch');
   const engineProjects = gridProjects.filter((p) => p.section === 'engine');
   const cppProjects = gridProjects.filter((p) => p.section === 'cpp');
   const gameProjects = gridProjects.filter((p) => !p.section);
@@ -871,6 +873,9 @@ function App() {
         </div>
         <div className="projects-featured" style={{ marginBottom: 24 }}>
           <ProjectCard project={struckd} isFeatured={true} />
+        </div>
+        <div className="projects-featured" style={{ marginBottom: 24 }}>
+          <ProjectCard project={twomatch} isFeatured={true} />
         </div>
         <div className="projects-grid">
           {rest.map((p) => <ProjectCard key={p.id} project={p} isFeatured={false} />)}
