@@ -581,6 +581,7 @@ const PROJECTS = [
   desc: "Contributed to the highly-anticipated sequel to Kerbal Space Program as Support Engineer.",
   links: [{ label: "Website", href: "https://store.steampowered.com/app/954850/Kerbal_Space_Program_2/" }],
   img: "Images/kerbal2-sc.jpg",
+  section: "engine",
   color: "195"
 },
 {
@@ -593,6 +594,7 @@ const PROJECTS = [
   links: [
   { label: "Steam", href: "https://store.steampowered.com/app/1276800/CONVERGENCE_A_League_of_Legends_Story/" }],
   img: "Images/convergence-sc.jpg",
+  section: "engine",
 
   color: "280"
 },
@@ -676,6 +678,7 @@ const PROJECTS = [
   color: "280"
 },
 {
+  section: "cpp",
   id: "ftj-engine",
   title: "FTJ Engine",
   year: "2016",
@@ -686,6 +689,7 @@ const PROJECTS = [
   color: "195"
 },
 {
+  section: "cpp",
   id: "minion-brawler",
   title: "Minion Brawler",
   year: "2016",
@@ -696,6 +700,7 @@ const PROJECTS = [
   color: "15"
 },
 {
+  section: "cpp",
   id: "island-raiders",
   title: "Island Raiders",
   year: "2015",
@@ -824,7 +829,10 @@ function App() {
   const featured = PROJECTS[0];
   const struckd = PROJECTS.find((p) => p.id === 'struckd');
   const gridProjects = PROJECTS.slice(1).filter((p) => p.id !== 'struckd');
-  const rest = showAll ? gridProjects : gridProjects.slice(0, 6);
+  const engineProjects = gridProjects.filter((p) => p.section === 'engine');
+  const cppProjects = gridProjects.filter((p) => p.section === 'cpp');
+  const gameProjects = gridProjects.filter((p) => !p.section);
+  const rest = showAll ? gameProjects : gameProjects.slice(0, 6);
 
   return (
     <>
@@ -856,7 +864,7 @@ function App() {
           <span className="section-label">01</span>
           <h2 className="section-title">Games</h2>
           <div className="section-line"></div>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--dim)', whiteSpace: 'nowrap' }}>{PROJECTS.length} titles</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--dim)', whiteSpace: 'nowrap' }}>{gameProjects.length + 2} titles</span>
         </div>
         <div className="projects-featured">
           <ProjectCard project={featured} isFeatured={true} />
@@ -880,16 +888,40 @@ function App() {
             onMouseOver={(e) => {e.target.style.borderColor = 'var(--cyan)';e.target.style.color = 'var(--cyan)';}}
             onMouseOut={(e) => {e.target.style.borderColor = 'var(--border)';e.target.style.color = 'var(--muted)';}}>
             
-              Show all {PROJECTS.length} projects ↓
+              Show all {gameProjects.length + 2} games ↓
             </button>
           </div>
         }
       </section>
 
+      {/* ENGINE SUPPORT */}
+      <section id="engine-support">
+        <div className="section-header">
+          <span className="section-label">02</span>
+          <h2 className="section-title">Engine Support</h2>
+          <div className="section-line"></div>
+        </div>
+        <div className="projects-grid">
+          {engineProjects.map((p) => <ProjectCard key={p.id} project={p} isFeatured={false} />)}
+        </div>
+      </section>
+
+      {/* CPP PROJECTS */}
+      <section id="cpp-projects">
+        <div className="section-header">
+          <span className="section-label">03</span>
+          <h2 className="section-title">C++ Projects</h2>
+          <div className="section-line"></div>
+        </div>
+        <div className="projects-grid">
+          {cppProjects.map((p) => <ProjectCard key={p.id} project={p} isFeatured={false} />)}
+        </div>
+      </section>
+
       {/* EVENTS */}
       <section id="events">
         <div className="section-header">
-          <span className="section-label">02</span>
+          <span className="section-label">04</span>
           <h2 className="section-title">Events</h2>
           <div className="section-line"></div>
         </div>
@@ -903,7 +935,7 @@ function App() {
       {/* SKILLS */}
       <section id="skills">
         <div className="section-header">
-          <span className="section-label">03</span>
+          <span className="section-label">05</span>
           <h2 className="section-title">Skills</h2>
           <div className="section-line"></div>
         </div>
